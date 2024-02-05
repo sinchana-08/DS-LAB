@@ -1,0 +1,115 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (newNode == NULL) {
+        printf("Memory allocation failed!\n");
+        exit(1);
+    }
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+
+void insertAtBeginning(struct Node** head, int data) {
+    struct Node* newNode = createNode(data);
+    newNode->next = *head;
+    *head = newNode;
+}
+
+void sortLinkedList(struct Node* head) {
+    int swapped, temp;
+    struct Node* ptr;
+    struct Node* lastPtr = NULL;
+
+    if (head == NULL)
+        return;
+
+    do {
+        swapped = 0;
+        ptr = head;
+
+        while (ptr->next != lastPtr) {
+            if (ptr->data > ptr->next->data) {
+                temp = ptr->data;
+                ptr->data = ptr->next->data;
+                ptr->next->data = temp;
+                swapped = 1;
+            }
+            ptr = ptr->next;
+        }
+        lastPtr = ptr;
+    } while (swapped);
+}
+
+void reverseLinkedList(struct Node** head) {
+    struct Node* prev = NULL;
+    struct Node* current = *head;
+    struct Node* next = NULL;
+
+    while (current != NULL) {
+        next = current->next;
+        current->next = prev;
+        prev = current;
+        current = next;
+    }
+    *head = prev;
+}
+
+void concatenateLinkedLists(struct Node** head1, struct Node* head2) {
+    if (*head1 == NULL) {
+        *head1 = head2;
+    } else {
+        struct Node* temp = *head1;
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = head2;
+    }
+}
+
+void displayLinkedList(struct Node* head) {
+    struct Node* temp = head;
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    struct Node* head = NULL;
+    struct Node* head2 = NULL;
+
+    insertAtBeginning(&head, 5);
+    insertAtBeginning(&head, 3);
+    insertAtBeginning(&head, 9);
+    printf("Original List 1: ");
+    displayLinkedList(head);
+
+    sortLinkedList(head);
+    printf("Sorted List 1: ");
+    displayLinkedList(head);
+
+    reverseLinkedList(&head);
+    printf("Reversed List 1: ");
+    displayLinkedList(head);
+
+    insertAtBeginning(&head2, 10);
+    insertAtBeginning(&head2, 7);
+    insertAtBeginning(&head2, 1);
+    printf("Original List 2: ");
+    displayLinkedList(head2);
+
+    concatenateLinkedLists(&head, head2);
+    printf("Concatenated List: ");
+    displayLinkedList(head);
+
+    return 0;
+}
