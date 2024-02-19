@@ -1,0 +1,82 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct node{
+    int data;
+    struct node *right_child;
+    struct node *left_child;
+};
+
+struct node* new_node(int x) {
+    struct node *temp;
+    temp = malloc(sizeof(struct node));
+    temp->data = x;
+    temp->left_child = NULL;
+    temp->right_child = NULL;
+    return temp;
+}
+
+struct node* insert(struct node* root, int x) {
+    if(root == NULL)
+        return new_node(x);
+    else if(x > root->data)
+        root->right_child = insert(root->right_child, x);
+    else
+        root->left_child = insert(root->left_child, x);
+    return root;
+}
+
+void inorder(struct node* root) {
+    if(root != NULL) {
+        inorder(root->left_child);
+        printf("%d ", root->data);
+        inorder(root->right_child);
+    }
+}
+
+void postorder(struct node* root) {
+    if(root != NULL) {
+        postorder(root->left_child);
+        postorder(root->right_child);
+        printf("%d ", root->data);
+    }
+}
+
+void preorder(struct node* root) {
+    if(root != NULL) {
+        printf("%d ", root->data);
+        preorder(root->left_child);
+        preorder(root->right_child);
+    }
+}
+void display_all_elements(struct node* root) {
+    printf("All elements of the tree: ");
+    inorder(root);
+    printf("\n");
+}
+int main() {
+    struct node* root = NULL;
+    root = insert(root, 50);
+    root = insert(root, 30);
+    root = insert(root, 20);
+    root = insert(root, 40);
+    root = insert(root, 70);
+    root = insert(root, 60);
+    root = insert(root, 80);
+
+    display_all_elements(root);
+
+    printf("Inorder traversal: ");
+    inorder(root);
+    printf("\n");
+
+    printf("Postorder traversal: ");
+    postorder(root);
+    printf("\n");
+
+    printf("Preorder traversal: ");
+    preorder(root);
+    printf("\n");
+
+    return 0;
+}
